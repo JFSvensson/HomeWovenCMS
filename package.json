@@ -1,0 +1,22 @@
+{
+  "name": "homewovencms",
+  "version": "1.0.0",
+  "description": "A home woven CMS for the local association.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JFSvensson/HomeWovenCMS.git"
+  },
+  "keywords": [
+    "CMS"
+  ],
+  "author": "Fredrik Svensson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JFSvensson/HomeWovenCMS/issues"
+  },
+  "homepage": "https://github.com/JFSvensson/HomeWovenCMS#readme"
+}
