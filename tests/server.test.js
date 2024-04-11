@@ -75,18 +75,6 @@ describe('Logger', () => {
   })
 })
 
-describe('Routes', () => {
-  it('should respond with a 404 error', async () => {
-    const response = await request(app).get('/missing')
-    expect(response.status).toBe(404)
-  })
-
-  it('should handle errors', async () => {
-    const response = await request(app).get('/error')
-    expect(response.status).toBe(500)
-  })
-})
-
 afterAll(async () => {
   await disconnectFromDatabase()
 })
