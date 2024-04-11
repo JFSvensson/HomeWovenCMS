@@ -11,6 +11,8 @@ import { connectToDatabase } from './config/mongoose.js'
 import helmet from 'helmet'
 import logger from 'morgan'
 import cookieParser from 'cookie-parser'
+import swaggerUi from 'swagger-ui-express'
+import openapiSpecification from './openapiDef.js'
 import { router } from './routes/router.js'
 
 const createServer = async () => {
@@ -36,6 +38,9 @@ const createServer = async () => {
       }
     })
   )
+
+  // Serve Swagger docs
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification))
 
   // Set up a morgan logger using the dev format for log entries.
   app.use(logger('dev'))
