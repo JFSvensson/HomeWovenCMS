@@ -5,7 +5,6 @@ Welcome to HomeWoven, a tailor-made Content Management System (CMS) designed for
 ## Features
 
 - **User-friendly Interface:** Easy to navigate for all users, regardless of technical skill.
-- **Member Management:** Efficiently manage member profiles, subscriptions, and communications.
 - **Content Creation:** A robust editor for creating engaging content, including articles, blog posts, and announcements.
 - **Responsive Design:** Ensures your site looks great on all devices, from desktops to smartphones.
 
