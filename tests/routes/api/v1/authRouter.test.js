@@ -2,6 +2,7 @@ import request from 'supertest'
 import createServer from '../../../../src/server.js'
 import dotenv from 'dotenv'
 import express from 'express'
+import cookieParser from 'cookie-parser'
 import { disconnectFromDatabase } from '../../../../src/config/mongoose.js'
 import { User } from '../../../../src/models/user.js'
 import { router } from '../../../../src/routes/api/v1/authRouter.js'
@@ -13,6 +14,7 @@ let app
 beforeAll(async () => {
   app = await createServer()
   app = express()
+  app.use(cookieParser())
   app.use(express.json())
   app.use(router)
 })
@@ -106,6 +108,51 @@ describe('Routes', () => {
     }
     const response = await request(app).post('/login').send(data)
     expect(response.status).toBe(401)
+  })
+
+  it('POST /refresh should respond with a 200 and a new token for valid data', async () => {
+    // First, log in to get the tokens
+    const loginData = {
+      username: 'testusername',
+      passphrase: 'testpassphrase'
+    }
+    const loginResponse = await request(app).post('/login').send(loginData)
+    expect(loginResponse.status).toBe(200)
+  
+    // Extract the tokens from the login response
+    const accessToken = loginResponse.body.access_token
+    const refreshToken = loginResponse.body.refresh_token
+  
+    // Then, use the refresh token to make a request to the /refresh endpoint
+    const response = await request(app)
+      .post('/refresh')
+      .set('Authorization', `Bearer ${accessToken}`) // Set the access token in the Authorization header
+      .set('Cookie', `refreshToken=${refreshToken}`) // Set the refresh token in a cookie
+  
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('access_token') // The response should contain a new access token
+  })
+
+  it('POST /logout should respond with a 200 for valid data', async () => {
+    // First, log in to get a token
+    const loginData = {
+      username: 'testusername',
+      passphrase: 'testpassphrase'
+    }
+    const loginResponse = await request(app).post('/login').send(loginData)
+    expect(loginResponse.status).toBe(200)
+  
+    // Extract the tokens from the login response
+    const accessToken = loginResponse.body.access_token
+    const refreshToken = loginResponse.body.refresh_token
+  
+    // Then, use the tokens to make a request to the /logout endpoint
+    const response = await request(app)
+      .post('/logout')
+      .set('Authorization', `Bearer ${accessToken}`) // Set the token in the Authorization header
+      .set('Cookie', `refreshToken=${refreshToken}`) // Set the refresh token in a cookie
+
+    expect(response.status).toBe(200)
   })
 
 })
