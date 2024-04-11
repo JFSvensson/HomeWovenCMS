@@ -75,7 +75,10 @@ export class AuthController {
         algorithm: 'RS256',
         expiresIn: Number(process.env.REFRESH_TOKEN_LIFE)
       })
-      res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
+      res.cookie('refreshToken', refreshToken, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production' 
+      })
 
       res
         .status(200)
