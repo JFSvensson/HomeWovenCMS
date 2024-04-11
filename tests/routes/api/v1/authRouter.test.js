@@ -159,6 +159,52 @@ describe('Routes', () => {
     expect(response.status).toBe(403)
   })
 
+  it('POST /refresh should respond with a 401 for missing refresh token', async () => {
+    // First, log in to get the tokens
+    const loginData = {
+      username: 'testusername',
+      passphrase: 'testpassphrase'
+    }
+    const loginResponse = await request(app).post('/login').send(loginData)
+    expect(loginResponse.status).toBe(200)
+  
+    // Extract the tokens from the login response
+    const accessToken = loginResponse.body.access_token
+  
+    // Then, use the refresh token to make a request to the /refresh endpoint
+    const response = await request(app)
+      .post('/refresh')
+      .set('Authorization', `Bearer ${accessToken}`) // Set the access token in the Authorization header
+      .set('Cookie', `refreshToken=`) // Set the refresh token in a cookie
+  
+    expect(response.status).toBe(401)
+  })
+
+  it('POST /refresh should respond with a 403 for invalid refresh token', async () => {
+    // First, log in to get the tokens
+    const loginData = {
+      username: 'testusername',
+      passphrase: 'testpassphrase'
+    }
+    const loginResponse = await request(app).post('/login').send(loginData)
+    expect(loginResponse.status).toBe(200)
+  
+    // Extract the tokens from the login response
+    const accessToken = loginResponse.body.access_token
+    const refreshToken = loginResponse.body.refresh_token
+  
+    // Modify the refresh token to make it invalid
+    const invalidRefreshToken = refreshToken + 'invalid'
+
+    // Then, use the refresh token to make a request to the /refresh endpoint
+    const response = await request(app)
+      .post('/refresh')
+      .set('Authorization', `Bearer ${accessToken}`) // Set the access token in the Authorization header
+      .set('Cookie', `refreshToken=${invalidRefreshToken}`) // Set the refresh token in a cookie
+  
+    expect(response.status).toBe(403)
+  })
+
   it('POST /logout should respond with a 200 for valid data', async () => {
     // First, log in to get a token
     const loginData = {
