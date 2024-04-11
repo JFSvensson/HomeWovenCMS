@@ -3,6 +3,7 @@ import createServer from '../../../../src/server.js'
 import dotenv from 'dotenv'
 import express from 'express'
 import { disconnectFromDatabase } from '../../../../src/config/mongoose.js'
+import { User } from '../../../../src/models/user.js'
 import { router } from '../../../../src/routes/api/v1/authRouter.js'
 
 dotenv.config({ path: '.env.test' })
@@ -42,10 +43,23 @@ describe('Routes', () => {
     }
     const response = await request(app).post('/register').send(data)
     expect(response.status).toBe(201)
-  }, 10000)
+  })
+
+  it('POST /register should respond with a 409 for duplicate data', async () => {
+    const data = {
+      username: 'testusername',
+      passphrase: 'testpassphrase',
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'test@test.com'
+    }
+    const response = await request(app).post('/register').send(data)
+    expect(response.status).toBe(409)
+  })
 
 })
 
 afterAll(async () => {
+  await User.deleteMany({})
   await disconnectFromDatabase()
 })
