@@ -32,7 +32,7 @@ describe('Routes', () => {
   })
 
   it('POST / should respond with a 404', async () => {
-    const response = await request(app).get('/')
+    const response = await request(app).post('/')
     expect(response.status).toBe(404)
   })
 
