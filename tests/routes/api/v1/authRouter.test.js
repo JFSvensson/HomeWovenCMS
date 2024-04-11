@@ -57,6 +57,57 @@ describe('Routes', () => {
     expect(response.status).toBe(409)
   })
 
+  it('POST /register should respond with a 400 for too short passphrase', async () => {
+    const data = {
+      username: 'testusername',
+      passphrase: 'short',
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'test@test.com'
+    }
+    const response = await request(app).post('/register').send(data)
+    expect(response.status).toBe(400)
+  })
+
+  it('POST /register should respond with a 400 for invalid email', async () => {
+    const data = {
+      username: 'testusername',
+      passphrase: 'testpassphrase',
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'nomail'
+    }
+    const response = await request(app).post('/register').send(data)
+    expect(response.status).toBe(400)
+  })
+
+  it('POST /login should respond with a 200 for valid data', async () => {
+    const data = {
+      username: 'testusername',
+      passphrase: 'testpassphrase'
+    }
+    const response = await request(app).post('/login').send(data)
+    expect(response.status).toBe(200)
+  })
+
+  it('POST /login should respond with a 401 for invalid username', async () => {
+    const data = {
+      username: 'wrongusername',
+      passphrase: 'testpassphrase'
+    }
+    const response = await request(app).post('/login').send(data)
+    expect(response.status).toBe(401)
+  })
+
+  it('POST /login should respond with a 401 for invalid passphrase', async () => {
+    const data = {
+      username: 'testusername',
+      passphrase: 'wrongpassphrase'
+    }
+    const response = await request(app).post('/login').send(data)
+    expect(response.status).toBe(401)
+  })
+
 })
 
 afterAll(async () => {
