@@ -46,8 +46,8 @@ const hateoas = new HateoasMiddleware()
  */
 router.get(
   '/:id', 
-  // checkAuthorization.checkAuthorization.bind(checkAuthorization), 
-  // checkOwner.checkOwner.bind(checkOwner),
+  checkAuthorization.checkAuthorization.bind(checkAuthorization), 
+  checkOwner.checkOwner.bind(checkOwner),
   hateoas.addLinks,
   (req, res) => controller.getUser(req, res)
 )
