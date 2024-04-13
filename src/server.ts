@@ -6,7 +6,7 @@
  * @since 0.1.0
  */
 
-import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import { connectToDatabase } from './config/mongoose.js'
 import helmet from 'helmet'
 import logger from 'morgan'
