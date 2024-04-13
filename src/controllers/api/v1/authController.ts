@@ -6,8 +6,12 @@
  * @since 0.1.0
  */
 
+import { Request, Response, NextFunction } from 'express'
+import { Error } from 'mongoose'
+import { MongoError } from 'mongodb'
 import jwt from 'jsonwebtoken'
-import createError from 'http-errors'
+import { HttpError } from '../../../lib/httpError'
+import { IUser } from '../../../interfaces/user'
 import { AuthService } from '../../../services/api/v1/authService.js'
 import { tokenBlacklist } from '../../../config/tokenBlacklist.js'
 
@@ -15,6 +19,8 @@ import { tokenBlacklist } from '../../../config/tokenBlacklist.js'
  * Handles requests regarding authorization.
  */
 export class AuthController {
+  private authService: AuthService
+
   constructor() {
     this.authService = new AuthService()
   }
@@ -25,7 +31,7 @@ export class AuthController {
    * @param {Response} res - The response object.
    * @param {NextFunction} next - The next middleware function.
    */
-  async register(req, res, next) {
+  async register(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.authService.createUser(req.body)
 
@@ -33,16 +39,11 @@ export class AuthController {
         .status(201)
         .json({ id: user.id })
     } catch (error) {
-      let err = error
-      if (err.code === 11000) {
-        // Duplicated keys.
-        err = createError(409)
-        err.message = 'The username and/or email address is already registered.'
-      } else if (error.name === 'ValidationError') {
-        // Validation error(s).
-        err = createError(400)
-        err.message = 'The request cannot or will not be processed due to something that is perceived to be a client error (for example validation error).'
-        err.cause = error
+      let err = error as Error
+      if (err.name === 'ValidationError') {
+        err = new HttpError('The request cannot or will not be processed due to something that is perceived to be a client error (for example validation error).', 400)
+      } else if (err.name === 'MongoServerError' && (err as MongoError).code === 11000) {
+        err = new HttpError('The username and/or email address is already registered.', 409)
       }
 
       next(err)
@@ -56,7 +57,7 @@ export class AuthController {
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  async login (req, res, next) {
+  async login (req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.authService.authenticateUser(req.body.username, req.body.passphrase)
       const payload = {
@@ -66,12 +67,20 @@ export class AuthController {
         email: user.email
       }
 
-      const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET.replace(/\\n/g, '\n'), {
+      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+      if (!accessTokenSecret) {
+        throw new Error('ACCESS_TOKEN_SECRET is not set');
+      }
+      const accessToken = jwt.sign(payload, accessTokenSecret.replace(/\\n/g, '\n'), {
         algorithm: 'RS256',
         expiresIn: Number(process.env.ACCESS_TOKEN_LIFE)
       })
 
-      const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET.replace(/\\n/g, '\n'), {
+      const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+      if (!refreshTokenSecret) {
+        throw new Error('REFRESH_TOKEN_SECRET is not set');
+      }
+      const refreshToken = jwt.sign(payload, refreshTokenSecret.replace(/\\n/g, '\n'), {
         algorithm: 'RS256',
         expiresIn: Number(process.env.REFRESH_TOKEN_LIFE)
       })
@@ -87,10 +96,7 @@ export class AuthController {
           refresh_token: refreshToken
         })
     } catch (error) {
-      const err = createError(401)
-      err.message = 'Credentials invalid or not provided.'
-      err.cause = error
-
+      const err = new HttpError('Credentials invalid or not provided.', 401)
       next(err)
     }
   }
@@ -103,7 +109,7 @@ export class AuthController {
    * @returns {void}
    * @throws {Error} Throws an error if the token is invalid.
    */
-  async refresh(req, res, next) {
+  async refresh(req: Request, res: Response, next: NextFunction) {
     const refreshToken = req.cookies.refreshToken
     if (!refreshToken) {
       return res.sendStatus(401)
@@ -114,12 +120,20 @@ export class AuthController {
       return res.sendStatus(403)
     }
 
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
+    if (!refreshTokenSecret) {
+      throw new Error('REFRESH_TOKEN_SECRET is not set')
+    }
+    jwt.verify(refreshToken, refreshTokenSecret, (err: unknown, user: any) => {
       if (err) {
         return res.sendStatus(403)
       }
 
-      const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET.replace(/\\n/g, '\n'), {
+      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+      if (!accessTokenSecret) {
+        throw new Error('ACCESS_TOKEN_SECRET is not set');
+      }
+      const accessToken = jwt.sign({ username: user.username }, accessTokenSecret.replace(/\\n/g, '\n'), {
         algorithm: 'RS256',
         expiresIn: process.env.ACCESS_TOKEN_LIFE
       })
@@ -137,7 +151,7 @@ export class AuthController {
    * @param {Request} req - The request object.
    * @param {Response} res - The response object.
    */
-  logout (req, res) {
+  logout (req: Request, res: Response) {
     // Get access token from Authorization header and blacklist it.
     const authHeader = req.headers.authorization
     if (authHeader) {
