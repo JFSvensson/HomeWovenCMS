@@ -5,9 +5,10 @@
   "type": "module",
   "main": "src/start.js",
   "scripts": {
-    "start": "node src/start.js",
-    "dev": "nodemon --inspect -r dotenv/config src/start.js",
-    "test": "jest",
+    "build": "tsc",
+    "start": "node dist/start.js",
+    "dev": "nodemon --inspect -r ts-node/register -r dotenv/config src/start.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest",
     "lint": "eslint ."
   },
   "repository": {
@@ -24,7 +25,11 @@
   },
   "homepage": "https://github.com/JFSvensson/HomeWovenCMS#readme",
   "devDependencies": {
+    "@babel/core": "^7.24.4",
     "@babel/preset-env": "^7.24.4",
+    "@babel/preset-typescript": "^7.24.1",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.7",
     "babel-jest": "^29.7.0",
     "babel-plugin-transform-import-meta": "^2.2.1",
     "dotenv": "^16.4.5",
@@ -33,7 +38,10 @@
     "nodemon": "^3.1.0",
     "supertest": "^6.3.4",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
