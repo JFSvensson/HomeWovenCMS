@@ -6,6 +6,10 @@
  * @since 0.1.0
  */
 
+import { NextFunction } from 'express'
+import { Request } from '../interfaces/request'
+import { Response } from '../interfaces/response'
+
 export class HateoasMiddleware {
 
   /**
@@ -15,7 +19,7 @@ export class HateoasMiddleware {
    * @param {NextFunction} next - The next middleware function.
    * @returns {void}
    */
-  addLinks(req, res, next) {
+  addLinks(req: Request, res: Response, next: NextFunction) {
     // Define links that should be included in all responses.
     const basicLinks = {
       self: {
@@ -32,7 +36,7 @@ export class HateoasMiddleware {
     }
 
     // Define dynamic links based on the request.
-    let dynamicLinks = {}
+    let dynamicLinks: any = {}
     
     if (req.originalUrl === '/api/v1/') {
       dynamicLinks.authRegister = {
