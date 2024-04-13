@@ -42,9 +42,11 @@
     "express-session": "^1.18.0",
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
+    "inversify": "^6.0.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.1",
     "morgan": "^1.10.0",
+    "reflect-metadata": "^0.2.2",
     "validator": "^13.11.0"
   }
 }
