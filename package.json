@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "A home woven CMS for the local association.",
   "type": "module",
-  "main": "src/start.js",
+  "main": "dist/start.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/start.js",
-    "dev": "nodemon --inspect -r ts-node/register -r dotenv/config src/start.js",
+    "dev": "nodemon --inspect -r ts-node/register -r dotenv/config src/start.ts",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest",
     "lint": "eslint ."
   },
