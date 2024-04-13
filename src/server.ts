@@ -6,7 +6,7 @@
  * @since 0.1.0
  */
 
-import express from 'express'
+import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express'
 import { connectToDatabase } from './config/mongoose.js'
 import helmet from 'helmet'
 import logger from 'morgan'
@@ -14,10 +14,15 @@ import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import openapiSpecification from './openapiDef.js'
 import { router } from './routes/router.js'
+import { HttpError } from './lib/httpError'
 
 const createServer = async () => {
   // Connect to the database.
-  await connectToDatabase(process.env.DB_CONNECTION_STRING)
+  const dbConnectionString = process.env.DB_CONNECTION_STRING;
+  if (!dbConnectionString) {
+    throw new Error('DB_CONNECTION_STRING is not set');
+  }
+  await connectToDatabase(dbConnectionString)
 
   // Create an Express application.
   const app = express()
@@ -60,7 +65,7 @@ const createServer = async () => {
   app.use('/', router)
 
   // Error handler.
-  app.use(function (err, req, res, next) {
+  app.use(function (err: HttpError, req: Request, res: Response, next: NextFunction) {
     // 404 Not Found.
     if (err.status === 404) {
       return res
