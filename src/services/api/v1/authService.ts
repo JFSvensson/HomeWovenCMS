@@ -9,12 +9,12 @@
 import { User } from '../../../models/user.js'
 
 export class AuthService {
-  async createUser(userData) {
+  async createUser(userData: any) {
     const user = await User.create(userData)
     return user
   }
 
-  async authenticateUser(username, passphrase) {
+  async authenticateUser(username: string, passphrase: string) {
     const user = await User.authenticate(username, passphrase)
     return user
   }
