@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/start.js",
-    "dev": "nodemon --inspect -r ts-node/register -r dotenv/config src/start.ts",
+    "dev": "tsx watch --inspect -r dotenv/config src/start.ts",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest",
     "lint": "eslint ."
   },
