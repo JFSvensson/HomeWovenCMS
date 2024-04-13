@@ -8,6 +8,8 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 import validator from 'validator'
+import { IUser } from '../interfaces/user'
+import { IUserModel } from '../interfaces/userModel'
 
 const { isEmail } = validator
 
@@ -99,4 +101,4 @@ schema.statics.authenticate = async function (username, passphrase) {
 }
 
 // Create a model using the schema.
-export const User = mongoose.model('User', schema)
+export const User = mongoose.model<IUser, IUserModel>('User', schema)
