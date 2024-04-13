@@ -67,9 +67,9 @@ export class AuthController {
         email: user.email
       }
 
-      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
       if (!accessTokenSecret) {
-        throw new Error('ACCESS_TOKEN_SECRET is not set');
+        throw new Error('ACCESS_TOKEN_SECRET is not set')
       }
       const accessToken = jwt.sign(payload, accessTokenSecret.replace(/\\n/g, '\n'), {
         algorithm: 'RS256',
