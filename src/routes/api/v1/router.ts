@@ -7,10 +7,10 @@
  */
 
 import express from 'express'
-import { router as authRouter } from './authRouter.js'
-import { router as usersRouter } from './usersRouter.js'
+import { router as authRouter } from './authRouter'
+import { router as usersRouter } from './usersRouter'
 // import { router as webhooksRouter } from './webhooksRouter.js'
-import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware.js'
+import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware'
 
 export const router = express.Router()
 
