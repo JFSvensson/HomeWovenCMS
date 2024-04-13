@@ -7,8 +7,8 @@
  */
 
 import express from 'express'
-// import { router as authRouter } from './authRouter.js'
-// import { router as usersRouter } from './usersRouter.js'
+import { router as authRouter } from './authRouter.js'
+import { router as usersRouter } from './usersRouter.js'
 // import { router as webhooksRouter } from './webhooksRouter.js'
 import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware.js'
 
@@ -62,11 +62,11 @@ router.get(
   hateoas.addLinks,
   (req, res) => {
     res.json({
-      message: 'Welcome to the NjordBreeze API. Use our endpoints to interact with weather data.',
+      message: 'Welcome to the HomeWoven CMS API.',
     })
   }
 )
 
-// router.use('/auth', authRouter)
-// router.use('/users', usersRouter)
+router.use('/auth', authRouter)
+router.use('/users', usersRouter)
 // router.use('/webhooks', webhooksRouter)
