@@ -17,5 +17,12 @@ module.exports = {
   coverageReporters: ['html'],
   transformIgnorePatterns: [
     "node_modules/(?!(module-that-needs-transpiling)/)" 
+  ],
+  reporters: [
+    "default",
+    ["jest-html-reporter", {
+      pageTitle: "Test Report",
+      outputPath: "./test-results/report.html"
+    }]
   ]
 }
