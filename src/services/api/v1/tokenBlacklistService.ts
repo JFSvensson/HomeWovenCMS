@@ -6,11 +6,13 @@
  * @since 0.1.0
  */
 export class TokenBlacklist {
+  private blacklist: Record<string, boolean>
+
   constructor() {
     this.blacklist = {}
   }
 
-  add(token) {
+  add(token: any) {
     this.blacklist[token] = true
   }
 
@@ -19,7 +21,7 @@ export class TokenBlacklist {
    * @param {string} token - The token to check.
    * @returns {boolean} True if the token is blacklisted, otherwise false.
    */
-  isListed(token) {
+  isListed(token: any) {
     return token in this.blacklist
   }
 }
