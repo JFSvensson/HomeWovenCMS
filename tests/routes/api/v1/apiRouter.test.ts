@@ -1,9 +1,13 @@
 import request from 'supertest'
 import express from 'express'
-import { router } from '../../../../src/routes/api/v1/router.js'
+import 'reflect-metadata'
+import { container } from '../../../../src/inversify.config'
+import { TYPES } from '../../../../src/types'
+import { ApiRouter } from '../../../../src/routes/api/v1/apiRouter'
 
 const app = express()
-app.use(router)
+const apiRouter = container.get<ApiRouter>(TYPES.ApiRouter)
+app.use('/', apiRouter.getRouter())
 
 describe('Routes', () => {
   it('GET /nonexistent should respond with a 404', async () => {
