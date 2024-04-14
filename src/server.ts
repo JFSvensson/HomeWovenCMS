@@ -13,7 +13,9 @@ import logger from 'morgan'
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import openapiSpecification from './openapiDef.js'
-import { router } from './routes/mainRouter.js'
+import { container } from './inversify.config'
+import { TYPES } from './types'
+import { MainRouter } from './routes/mainRouter'
 import { HttpError } from './lib/httpError'
 
 const createServer = async () => {
@@ -62,7 +64,8 @@ const createServer = async () => {
   }
 
   // Register routes.
-  app.use('/', router)
+  const mainRouter = container.get<MainRouter>(TYPES.MainRouter)
+  app.use('/', mainRouter.getRouter())
 
   // Error handler.
   app.use(function (err: HttpError, req: Request, res: Response, next: NextFunction) {
