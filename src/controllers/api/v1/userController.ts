@@ -5,13 +5,14 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-
+import { injectable } from 'inversify'
 import { Request, Response, NextFunction } from 'express'
 import { UserService } from '../../../services/api/v1/userService'
 
 /**
  * Handles requests for user data.
  */
+@injectable()
 export class UserController {
   private userService: UserService
 

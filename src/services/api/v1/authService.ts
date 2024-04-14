@@ -5,9 +5,10 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-
+import { injectable } from 'inversify'
 import { User } from '../../../models/user.js'
 
+@injectable()
 export class AuthService {
   async createUser(userData: any) {
     const user = await User.create(userData)

@@ -5,11 +5,12 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-
+import { injectable } from 'inversify'
 import { NextFunction } from 'express'
 import { Request } from '../interfaces/request'
 import { Response } from '../interfaces/response'
 
+@injectable()
 export class HateoasMiddleware {
 
   /**

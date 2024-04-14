@@ -7,9 +7,11 @@
  */
 import { Response, NextFunction } from 'express'
 import { Request } from '../interfaces/request'
+import { injectable } from 'inversify'
 import jwt from 'jsonwebtoken'
 import { tokenBlacklist } from '../config/tokenBlacklist.js'
 
+@injectable()
 export class AuthMiddleware {
 
   /**

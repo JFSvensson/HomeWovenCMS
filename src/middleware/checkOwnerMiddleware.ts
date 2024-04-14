@@ -5,10 +5,11 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-
+import { injectable } from 'inversify'
 import { Response, NextFunction } from 'express'
 import { Request } from '../interfaces/request'
 
+@injectable()
 export class CheckOwnerMiddleware {
 
   /**
