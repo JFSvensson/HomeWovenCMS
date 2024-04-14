@@ -14,7 +14,7 @@ import { UserRouter } from './userRouter'
 import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware'
 
 @injectable()
-export class Router {
+export class ApiRouter {
   private authRouter: AuthRouter
   private userRouter: UserRouter
   private hateoasMiddleware: HateoasMiddleware
