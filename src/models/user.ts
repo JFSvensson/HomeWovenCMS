@@ -8,8 +8,8 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 import validator from 'validator'
-import { IUser } from '../interfaces/user'
-import { IUserModel } from '../interfaces/userModel'
+import { IUser } from '../interfaces/user.js'
+import { IUserModel } from '../interfaces/userModel.js'
 
 const { isEmail } = validator
 

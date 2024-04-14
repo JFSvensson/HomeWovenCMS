@@ -7,11 +7,11 @@
  */
 import express from 'express'
 import { inject, injectable } from 'inversify'
-import { TYPES } from '../../../types'
-import { UserController } from '../../../controllers/api/v1/userController'
-import { AuthMiddleware } from '../../../middleware/authMiddleware'
-import { CheckOwnerMiddleware } from '../../../middleware/checkOwnerMiddleware'
-import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware'
+import { TYPES } from '../../../types.js'
+import { UserController } from '../../../controllers/api/v1/userController.js'
+import { AuthMiddleware } from '../../../middleware/authMiddleware.js'
+import { CheckOwnerMiddleware } from '../../../middleware/checkOwnerMiddleware.js'
+import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware.js'
 
 @injectable()
 export class UserRouter {

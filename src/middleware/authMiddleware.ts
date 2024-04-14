@@ -6,7 +6,7 @@
  * @since 0.1.0
  */
 import { Response, NextFunction } from 'express'
-import { Request } from '../interfaces/request'
+import { Request } from '../interfaces/request.js'
 import { injectable } from 'inversify'
 import jwt from 'jsonwebtoken'
 import { tokenBlacklist } from '../config/tokenBlacklist.js'

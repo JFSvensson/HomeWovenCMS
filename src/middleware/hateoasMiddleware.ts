@@ -7,8 +7,8 @@
  */
 import { injectable } from 'inversify'
 import { NextFunction } from 'express'
-import { Request } from '../interfaces/request'
-import { Response } from '../interfaces/response'
+import { Request } from '../interfaces/request.js'
+import { Response } from '../interfaces/response.js'
 
 @injectable()
 export class HateoasMiddleware {

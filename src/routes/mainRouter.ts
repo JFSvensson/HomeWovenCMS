@@ -8,9 +8,9 @@
 
 import express, { Request, Response, NextFunction } from 'express'
 import { inject, injectable } from 'inversify'
-import { HttpError } from '../lib/httpError'
-import { TYPES } from '../types'
-import { ApiRouter } from './api/v1/apiRouter'
+import { HttpError } from '../lib/httpError.js'
+import { TYPES } from '../types.js'
+import { ApiRouter } from './api/v1/apiRouter.js'
 
 
 @injectable()

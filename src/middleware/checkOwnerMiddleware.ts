@@ -7,7 +7,7 @@
  */
 import { injectable } from 'inversify'
 import { Response, NextFunction } from 'express'
-import { Request } from '../interfaces/request'
+import { Request } from '../interfaces/request.js'
 
 @injectable()
 export class CheckOwnerMiddleware {

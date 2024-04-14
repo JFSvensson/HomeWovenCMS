@@ -5,7 +5,7 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-
+import 'reflect-metadata'
 import express, { Request, Response, NextFunction } from 'express'
 import { connectToDatabase } from './config/mongoose.js'
 import helmet from 'helmet'
@@ -13,10 +13,12 @@ import logger from 'morgan'
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import openapiSpecification from './openapiDef.js'
-import { container } from './inversify.config'
-import { TYPES } from './types'
-import { MainRouter } from './routes/mainRouter'
-import { HttpError } from './lib/httpError'
+import { container } from './inversify.config.js'
+import { TYPES } from './types.js'
+import { MainRouter } from './routes/mainRouter.js'
+import { HttpError } from './lib/httpError.js'
+
+
 
 const createServer = async () => {
   // Connect to the database.

@@ -7,7 +7,7 @@
  */
 import { injectable } from 'inversify'
 import { Request, Response, NextFunction } from 'express'
-import { UserService } from '../../../services/api/v1/userService'
+import { UserService } from '../../../services/api/v1/userService.js'
 
 /**
  * Handles requests for user data.

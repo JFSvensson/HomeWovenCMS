@@ -8,10 +8,10 @@
 
 import express from 'express'
 import { inject, injectable } from 'inversify'
-import { TYPES } from '../../../types'
-import { AuthRouter } from './authRouter'
-import { UserRouter } from './userRouter'
-import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware'
+import { TYPES } from '../../../types.js'
+import { AuthRouter } from './authRouter.js'
+import { UserRouter } from './userRouter.js'
+import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware.js'
 
 @injectable()
 export class ApiRouter {
