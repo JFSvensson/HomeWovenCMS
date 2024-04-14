@@ -1,9 +1,13 @@
 import request from 'supertest'
+import 'reflect-metadata'
+import { container } from '../../src/inversify.config'
+import { TYPES } from '../../src/types'
 import express from 'express'
-import { router } from '../../src/routes/router.js'
+import { MainRouter } from '../../src/routes/mainRouter'
 
 const app = express()
-app.use(router)
+const mainRouter = container.get<MainRouter>(TYPES.MainRouter)
+app.use('/', mainRouter.getRouter())
 
 describe('Routes', () => {
   it('should respond with a 404 error for missing routes', async () => {
