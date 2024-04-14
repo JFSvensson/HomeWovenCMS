@@ -10,6 +10,8 @@ import { Request, Response, NextFunction } from 'express'
 import { Error } from 'mongoose'
 import { MongoError } from 'mongodb'
 import jwt from 'jsonwebtoken'
+import { inject, injectable } from 'inversify'
+import { TYPES } from '../../../types'
 import { HttpError } from '../../../lib/httpError'
 import { IUser } from '../../../interfaces/user'
 import { AuthService } from '../../../services/api/v1/authService.js'
@@ -18,11 +20,12 @@ import { tokenBlacklist } from '../../../config/tokenBlacklist.js'
 /**
  * Handles requests regarding authorization.
  */
+@injectable()
 export class AuthController {
   private authService: AuthService
 
-  constructor() {
-    this.authService = new AuthService()
+  constructor(@inject(TYPES.AuthService) authService: AuthService) {
+    this.authService = authService
   }
 
   /**
