@@ -6,15 +6,31 @@
  */
 
 import express from 'express'
+import { inject, injectable } from 'inversify'
+import { TYPES } from '../../../types'
 import { AuthController } from '../../../controllers/api/v1/authController'
 import { AuthMiddleware } from '../../../middleware/authMiddleware'
 import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware'
 
-export const router = express.Router()
 
-const controller = new AuthController()
-const checkAuthorization = new AuthMiddleware()
-const hateoas = new HateoasMiddleware()
+@injectable()
+export class AuthRouter {
+  private authController: AuthController
+  private authMiddleware: AuthMiddleware
+  private hateoasMiddleware: HateoasMiddleware
+
+  constructor(
+    @inject(TYPES.AuthController) authController: AuthController,
+    @inject(TYPES.AuthMiddleware) authMiddleware: AuthMiddleware,
+    @inject(TYPES.HateoasMiddleware) hateoasMiddleware: HateoasMiddleware
+  ) {
+    this.authController = authController
+    this.authMiddleware = authMiddleware
+    this.hateoasMiddleware = hateoasMiddleware
+  }
+
+  getRouter(): express.Router {
+    const router = express.Router()
 
 /**
  * @openapi
@@ -36,8 +52,8 @@ const hateoas = new HateoasMiddleware()
  */
 router.post(
   '/register',
-  hateoas.addLinks,
-  (req, res, next) => controller.register(req, res, next)
+  this.hateoasMiddleware.addLinks,
+  (req, res, next) => this.authController.register(req, res, next)
 )
 
 /**
@@ -77,8 +93,8 @@ router.post(
  */
 router.post(
   '/login',
-  hateoas.addLinks,
-  (req, res, next) => controller.login(req, res, next)
+  this.hateoasMiddleware.addLinks,
+  (req, res, next) => this.authController.login(req, res, next)
 )
 
 /**
@@ -97,9 +113,9 @@ router.post(
  */
 router.post(
   '/logout',
-  hateoas.addLinks,
-  checkAuthorization.checkAuthorization.bind(checkAuthorization),
-  (req, res) => controller.logout(req, res)
+  this.hateoasMiddleware.addLinks,
+  this.authMiddleware.checkAuthorization.bind(this.authMiddleware),
+  (req, res) => this.authController.logout(req, res)
 )
 
 /**
@@ -124,10 +140,14 @@ router.post(
  */
 router.post(
   '/refresh',
-  hateoas.addLinks,
-  checkAuthorization.checkAuthorization.bind(checkAuthorization), 
-  (req, res, next) => controller.refresh(req, res, next)
+  this.hateoasMiddleware.addLinks,
+  this.authMiddleware.checkAuthorization.bind(this.authMiddleware),
+  (req, res, next) => this.authController.refresh(req, res, next)
 )
+
+    return router
+  }
+}
 
 /**
  * @openapi
