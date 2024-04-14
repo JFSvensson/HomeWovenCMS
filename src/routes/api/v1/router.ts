@@ -7,66 +7,85 @@
  */
 
 import express from 'express'
-import { router as authRouter } from './authRouter'
-import { router as usersRouter } from './usersRouter'
-// import { router as webhooksRouter } from './webhooksRouter.js'
+import { inject, injectable } from 'inversify'
+import { TYPES } from '../../../types'
+import { AuthRouter } from './authRouter'
+import { UserRouter } from './userRouter'
 import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware'
 
-export const router = express.Router()
+@injectable()
+export class Router {
+  private authRouter: AuthRouter
+  private userRouter: UserRouter
+  private hateoasMiddleware: HateoasMiddleware
 
-const hateoas = new HateoasMiddleware()
-
-/**
- * @openapi
- * /:
- *   get:
- *     summary: Get API status
- *     description: Returns the status of the API and provides dynamical links to other endpoints.
- *     tags:
- *      - Status
- *     responses:
- *       200:
- *         description: API is up and running. 
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Welcome to the HomeWoven CMS API.
- *                 documentation:
- *                   type: string
- *                   example: https://vassmolösa.se/docs
- *                 _links:
- *                   type: object
- *                   properties:
- *                     self:
- *                       type: string
- *                       description: The current endpoint.
- *                       example: /
- *                     auth:
- *                       type: string
- *                       description: The authentication endpoint.
- *                       example: /auth
- *                     users:
- *                       type: string
- *                       description: The user data endpoint.
- *                       example: /users
- *                     webhooks:
- *                       type: string
- *                       example: /webhooks
- */
-router.get(
-  '/',
-  hateoas.addLinks,
-  (req, res) => {
-    res.json({
-      message: 'Welcome to the HomeWoven CMS API.',
-    })
+  constructor(
+    @inject(TYPES.AuthRouter) authRouter: AuthRouter,
+    @inject(TYPES.UserRouter) userRouter: UserRouter,
+    @inject(TYPES.HateoasMiddleware) hateoasMiddleware: HateoasMiddleware
+  ) {
+    this.authRouter = authRouter
+    this.userRouter = userRouter
+    this.hateoasMiddleware = hateoasMiddleware
   }
-)
 
-router.use('/auth', authRouter)
-router.use('/users', usersRouter)
-// router.use('/webhooks', webhooksRouter)
+  getRouter(): express.Router {
+    const router = express.Router()
+
+    /**
+     * @openapi
+     * /:
+     *   get:
+     *     summary: Get API status
+     *     description: Returns the status of the API and provides dynamical links to other endpoints.
+     *     tags:
+     *      - Status
+     *     responses:
+     *       200:
+     *         description: API is up and running. 
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                   example: Welcome to the HomeWoven CMS API.
+     *                 documentation:
+     *                   type: string
+     *                   example: https://vassmolösa.se/docs
+     *                 _links:
+     *                   type: object
+     *                   properties:
+     *                     self:
+     *                       type: string
+     *                       description: The current endpoint.
+     *                       example: /
+     *                     auth:
+     *                       type: string
+     *                       description: The authentication endpoint.
+     *                       example: /auth
+     *                     users:
+     *                       type: string
+     *                       description: The user data endpoint.
+     *                       example: /users
+     *                     webhooks:
+     *                       type: string
+     *                       example: /webhooks
+     */
+    router.get(
+      '/',
+      this.hateoasMiddleware.addLinks,
+      (req, res) => {
+        res.json({
+          message: 'Welcome to the HomeWoven CMS API.',
+        })
+      }
+    )
+
+    router.use('/auth', this.authRouter.getRouter())
+    router.use('/users', this.userRouter.getRouter())
+
+    return router
+  }
+}
