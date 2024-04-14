@@ -1,5 +1,6 @@
 import { Container } from 'inversify'
 import { TYPES } from './types'
+import { MainRouter } from './routes/mainRouter'
 import { ApiRouter } from './routes/api/v1/apiRouter'
 import { AuthRouter } from './routes/api/v1/authRouter'
 import { AuthService } from './services/api/v1/authService'
@@ -12,6 +13,7 @@ import { CheckOwnerMiddleware } from './middleware/checkOwnerMiddleware'
 import { HateoasMiddleware } from './middleware/hateoasMiddleware'
 
 const container = new Container()
+container.bind(TYPES.MainRouter).to(MainRouter)
 container.bind(TYPES.ApiRouter).to(ApiRouter)
 container.bind(TYPES.AuthRouter).to(AuthRouter)
 container.bind(TYPES.AuthService).to(AuthService)

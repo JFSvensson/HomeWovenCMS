@@ -1,4 +1,5 @@
 export const TYPES = {
+  MainRouter: Symbol.for('MainRouter'),
   ApiRouter: Symbol.for('ApiRouter'),
   AuthRouter: Symbol.for('AuthRouter'),
   AuthService: Symbol.for('AuthService'),
