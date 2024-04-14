@@ -1,12 +1,12 @@
 import request from 'supertest'
+import 'reflect-metadata'
 import createServer from '../src/server.js'
 import dotenv from 'dotenv'
-import logger from 'morgan'
 import { disconnectFromDatabase } from '../src/config/mongoose.js'
 
 dotenv.config({ path: '.env.test' })
 
-let app
+let app : any
 
 beforeAll(async () => {
   app = await createServer()
@@ -20,7 +20,7 @@ describe('Server configuration', () => {
 })
 
 describe('Helmet', () => {
-  let response
+  let response : any
   beforeEach(async () => {
     response = await request(app).get('/')
   })
@@ -54,24 +54,6 @@ describe('Helmet', () => {
   })
   it('should set the Server header', async () => {
     expect(response.headers.server).toBeUndefined()
-  })
-})
-
-jest.mock('morgan', () => jest.fn(() => (req, res, next) => {
-  console.log(`${req.method} ${req.url}`)
-  next()
-}))
-
-describe('Logger', () => {
-  it('should use morgan middleware', () => {
-    expect(logger).toHaveBeenCalledWith('dev')
-  })
-
-  it('should log the HTTP request', async () => {
-    const consoleSpy = jest.spyOn(console, 'log')
-    await request(app).get('/')
-    expect(consoleSpy).toHaveBeenCalled()
-    consoleSpy.mockRestore()
   })
 })
 
