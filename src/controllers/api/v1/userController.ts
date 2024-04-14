@@ -7,16 +7,16 @@
  */
 
 import { Request, Response, NextFunction } from 'express'
-import { UsersService } from '../../../services/api/v1/userService'
+import { UserService } from '../../../services/api/v1/userService'
 
 /**
  * Handles requests for user data.
  */
-export class UsersController {
-  private usersService: UsersService
+export class UserController {
+  private userService: UserService
 
   constructor() {
-    this.usersService = new UsersService()
+    this.userService = new UserService()
   }
 
   /**
@@ -29,7 +29,7 @@ export class UsersController {
    */
   async getUser(req: Request, res: Response) {
     try {
-      const user = await this.usersService.getUserById(req.params.id)
+      const user = await this.userService.getUserById(req.params.id)
       if (!user) {
         return res.status(404).json({ message: 'User not found' })
       }
@@ -49,7 +49,7 @@ export class UsersController {
    */
   async updateUser(req: Request, res: Response) {
     try {
-      const response = await this.usersService.updateUser(req.params.id, req.body)
+      const response = await this.userService.updateUser(req.params.id, req.body)
       if (!response.user) {
         return res.status(404).json({ message: 'User not found' })
       }
@@ -69,7 +69,7 @@ export class UsersController {
    */
   async deleteUser(req: Request, res: Response) {
     try {
-      const response = await this.usersService.deleteUser(req.params.id)
+      const response = await this.userService.deleteUser(req.params.id)
       if (!response.user) {
         return res.status(404).json({ message: 'User not found' })
       }
