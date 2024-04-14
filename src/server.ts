@@ -13,7 +13,7 @@ import logger from 'morgan'
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import openapiSpecification from './openapiDef.js'
-import { router } from './routes/router.js'
+import { router } from './routes/mainRouter.js'
 import { HttpError } from './lib/httpError'
 
 const createServer = async () => {
