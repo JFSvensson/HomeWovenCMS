@@ -8,7 +8,7 @@
 
 import { User } from '../../../models/user.js'
 
-export class UsersService {
+export class UserService {
   async getUserById(id: any) {
     const user = await User.findById(id).select('-username -passphrase')
     return user
