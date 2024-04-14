@@ -6,6 +6,7 @@
  * @since 0.1.0
  */
 import createServer from './server.js'
+import 'reflect-metadata'
 
 createServer().then((app: any) => {
   const port: number = Number(process.env.PORT) || 3000
