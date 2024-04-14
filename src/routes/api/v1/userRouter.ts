@@ -7,10 +7,10 @@
  */
 
 import express from 'express'
-import { UsersController } from '../../../controllers/api/v1/usersController.js'
-import { AuthMiddleware } from '../../../middleware/authMiddleware'
+import { UsersController } from '../../../controllers/api/v1/userController.js'
+import { AuthMiddleware } from '../../../middleware/authMiddleware.js'
 import { CheckOwnerMiddleware } from '../../../middleware/checkOwnerMiddleware.js'
-import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware'
+import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware.js'
 
 export const router = express.Router()
 

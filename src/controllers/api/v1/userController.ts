@@ -7,7 +7,7 @@
  */
 
 import { Request, Response, NextFunction } from 'express'
-import { UsersService } from '../../../services/api/v1/usersService'
+import { UsersService } from '../../../services/api/v1/userService'
 
 /**
  * Handles requests for user data.
