@@ -54,7 +54,6 @@ export class AuthRouter {
       '/register',
       this.hateoasMiddleware.addLinks,
       (req, res, next) => {
-        console.log('Registering user...')
         this.authController.register(req, res, next)
       }
     )
