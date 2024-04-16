@@ -5,7 +5,6 @@
 import 'reflect-metadata'
 import { injectable } from 'inversify'
 import { Request, Response, NextFunction } from 'express'
-import { access } from 'fs'
 
 @injectable()
 export class MockAuthController {
@@ -26,9 +25,6 @@ export class MockAuthController {
       res.status(409).send({ error: 'User already exists' })
       return
     }
-
-    // Check if res.body is valid (equal to username: 'testusername', passphrase: 'testpassphrase', firstName: 'Test', lastName: 'User', email: 'test@test.com')
-    // If it is, return a response with status 201 and a JSON object with an id property with the value '1234567890'
     if (
       req.body.username === 'testusername' && 
       req.body.passphrase === 'testpassphrase' && 
@@ -84,5 +80,4 @@ export class MockAuthController {
     res.status(200).send({ message: 'Logged out' })
     return
   }
-
 }
