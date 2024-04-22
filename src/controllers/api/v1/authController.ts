@@ -10,6 +10,7 @@ import { Request, Response, NextFunction } from 'express'
 import { Error } from 'mongoose'
 import { MongoError } from 'mongodb'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../../types.js'
 import { HttpError } from '../../../lib/httpError.js'
@@ -63,11 +64,13 @@ export class AuthController {
   async login (req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.authService.authenticateUser(req.body.username, req.body.passphrase)
+      const nonce = crypto.randomBytes(16).toString('hex')
       const payload = {
         sub: user._id,
         given_name: user.firstName,
         family_name: user.lastName,
-        email: user.email
+        email: user.email,
+        nonce: nonce
       }
 
       const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
@@ -127,26 +130,39 @@ export class AuthController {
     if (!refreshTokenSecret) {
       throw new Error('REFRESH_TOKEN_SECRET is not set')
     }
-    jwt.verify(refreshToken, refreshTokenSecret, (err: unknown, user: any) => {
-      if (err) {
-        return res.sendStatus(403)
-      }
 
-      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-      if (!accessTokenSecret) {
-        throw new Error('ACCESS_TOKEN_SECRET is not set');
-      }
-      const accessToken = jwt.sign({ username: user.username }, accessTokenSecret.replace(/\\n/g, '\n'), {
-        algorithm: 'RS256',
-        expiresIn: process.env.ACCESS_TOKEN_LIFE
-      })
-  
-      res
-        .status(200)
-        .json({ 
-          access_token: accessToken 
+    try {
+      jwt.verify(refreshToken, refreshTokenSecret, (err: unknown, decoded: any) => {
+        if (err) {
+          return res.sendStatus(403)
+        }
+        const payload = {
+          sub: decoded.sub,
+          given_name: decoded.given_name,
+          family_name: decoded.family_name,
+          email: decoded.email,
+          nonce: decoded.nonce
+        }
+
+        const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+        if (!accessTokenSecret) {
+          throw new Error('ACCESS_TOKEN_SECRET is not set');
+        }
+        const accessToken = jwt.sign(payload, accessTokenSecret.replace(/\\n/g, '\n'), {
+          algorithm: 'RS256',
+          expiresIn: process.env.ACCESS_TOKEN_LIFE
         })
-    })
+    
+        res
+          .status(200)
+          .json({ 
+            access_token: accessToken 
+          })
+      })
+    } catch (error) {
+      const err = new HttpError('Invalid token.', 403)
+      next(err)
+    }
   }
 
   /**
