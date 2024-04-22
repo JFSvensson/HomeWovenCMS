@@ -11,21 +11,25 @@ import { inject, injectable } from 'inversify'
 import { TYPES } from '../../../types.js'
 import { AuthRouter } from './authRouter.js'
 import { UserRouter } from './userRouter.js'
+import { ArticleRouter } from './articleRouter.js'
 import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware.js'
 
 @injectable()
 export class ApiRouter {
   private authRouter: AuthRouter
   private userRouter: UserRouter
+  private articleRouter: ArticleRouter
   private hateoasMiddleware: HateoasMiddleware
 
   constructor(
     @inject(TYPES.AuthRouter) authRouter: AuthRouter,
     @inject(TYPES.UserRouter) userRouter: UserRouter,
+    @inject(TYPES.ArticleRouter) articleRouter: ArticleRouter,
     @inject(TYPES.HateoasMiddleware) hateoasMiddleware: HateoasMiddleware
   ) {
     this.authRouter = authRouter
     this.userRouter = userRouter
+    this.articleRouter = articleRouter
     this.hateoasMiddleware = hateoasMiddleware
   }
 
@@ -85,6 +89,7 @@ export class ApiRouter {
 
     router.use('/auth', this.authRouter.getRouter())
     router.use('/users', this.userRouter.getRouter())
+    router.use('/articles', this.articleRouter.getRouter())
 
     return router
   }
