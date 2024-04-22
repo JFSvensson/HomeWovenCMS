@@ -1,4 +1,3 @@
-
 /**
  * Mock implementation of the AuthService class
  */
@@ -8,10 +7,9 @@ import { injectable } from 'inversify'
 @injectable()
 export class MockAuthService {
   async createUser(userData: any) {
-    if (userData.passphrase.length < 6) {
-      throw new Error('Passphrase too short')
+    if (!userData.username || !userData.passphrase || !userData.firstName || !userData.lastName || !userData.email) {
+      throw new Error('The request cannot or will not be processed due to something that is perceived to be a client error (for example validation error).')
     }
-
     return {    
       username: userData.username,
       passphrase: userData.passphrase,
@@ -23,13 +21,14 @@ export class MockAuthService {
   }
 
   async authenticateUser(username: string, passphrase: string) {
-    // Instead of authenticating the user with the database, return a mock user
-    // You can add logic here to simulate different scenarios, like incorrect username or passphrase
-    if (username === 'correctUsername' && passphrase === 'correctPassphrase') {
-      return {
-        id: 'mockUserId',
-        username: username,
-        // ... other user data ...
+    if (username === 'testusername' && passphrase === 'testpassphrase') {
+      return {    
+        username: 'testusername',
+        passphrase: 'testpassphrase',
+        firstName: 'Test',
+        lastName: 'User',
+        email: 'test@test.com',
+        _id: '1234567890'
       }
     } else {
       throw new Error('Incorrect username or passphrase')
