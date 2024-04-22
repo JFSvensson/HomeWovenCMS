@@ -22,7 +22,7 @@ export class ArticleRouter {
   private hateoasMiddleware: HateoasMiddleware
 
   constructor(
-    @inject(TYPES.UserController) articleController: ArticleController,
+    @inject(TYPES.ArticleController) articleController: ArticleController,
     @inject(TYPES.AuthMiddleware) authMiddleware: AuthMiddleware,
     @inject(TYPES.CheckOwnerMiddleware) checkOwnerMiddleware: CheckOwnerMiddleware,
     @inject(TYPES.HateoasMiddleware) hateoasMiddleware: HateoasMiddleware
