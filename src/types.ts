@@ -1,3 +1,5 @@
+import { Article } from "./models/article";
+
 export const TYPES = {
   MainRouter: Symbol.for('MainRouter'),
   ApiRouter: Symbol.for('ApiRouter'),
@@ -7,6 +9,9 @@ export const TYPES = {
   UserRouter: Symbol.for('UserRouter'),
   UserService: Symbol.for('UserService'),
   UserController: Symbol.for('UserController'),
+  ArticleRouter: Symbol.for('ArticleRouter'),
+  ArticleService: Symbol.for('ArticleService'),
+  ArticleController: Symbol.for('ArticleController'),
   AuthMiddleware: Symbol.for('AuthMiddleware'),
   CheckOwnerMiddleware: Symbol.for('CheckOwnerMiddleware'),
   HateoasMiddleware: Symbol.for('HateoasMiddleware')
