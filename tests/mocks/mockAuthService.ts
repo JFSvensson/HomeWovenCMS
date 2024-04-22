@@ -8,6 +8,10 @@ import { injectable } from 'inversify'
 @injectable()
 export class MockAuthService {
   async createUser(userData: any) {
+    if (userData.passphrase.length < 6) {
+      throw new Error('Passphrase too short')
+    }
+
     return {    
       username: userData.username,
       passphrase: userData.passphrase,
