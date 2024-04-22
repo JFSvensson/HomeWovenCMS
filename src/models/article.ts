@@ -6,9 +6,11 @@
  */
 
 import mongoose from 'mongoose'
-import { isURL } from 'validator'
+import validator from 'validator'
 import { IArticle } from '../interfaces/article'
 import { IArticleModel } from '../interfaces/articleModel'
+
+const { isURL } = validator
 
 // Create a schema.
 const schema = new mongoose.Schema({
