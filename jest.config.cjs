@@ -25,5 +25,8 @@ module.exports = {
       pageTitle: "Test Report",
       outputPath: "./test-results/report.html"
     }]
-  ]
+  ],
+  setupFiles: [
+    "./tests/test-setup.ts"
+]
 }
