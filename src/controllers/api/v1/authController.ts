@@ -82,7 +82,7 @@ export class AuthController {
         expiresIn: Number(process.env.ACCESS_TOKEN_LIFE)
       })
 
-      const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+      const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
       if (!refreshTokenSecret) {
         throw new Error('REFRESH_TOKEN_SECRET is not set');
       }
