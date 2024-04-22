@@ -7,6 +7,8 @@
 
 import mongoose from 'mongoose'
 import { isURL } from 'validator'
+import { IArticle } from '../interfaces/article'
+import { IArticleModel } from '../interfaces/articleModel'
 
 // Create a schema.
 const schema = new mongoose.Schema({
@@ -49,4 +51,4 @@ schema.virtual('id').get(function () {
 })
 
 // Create a model using the schema.
-export const Article = mongoose.model('Article', schema)
+export const Article = mongoose.model<IArticle, IArticleModel>('Article', schema)
