@@ -11,6 +11,9 @@ import { UserController } from './controllers/api/v1/userController.js'
 import { ArticleRouter } from './routes/api/v1/articleRouter.js'
 import { ArticleService } from './services/api/v1/articleService.js'
 import { ArticleController } from './controllers/api/v1/articleController.js'
+import { FileRouter } from './routes/api/v1/fileRouter.js'
+import { FileService } from './services/api/v1/fileService.js'
+import { FileController } from './controllers/api/v1/fileController.js'
 import { AuthMiddleware } from './middleware/authMiddleware.js'
 import { CheckOwnerMiddleware } from './middleware/checkOwnerMiddleware.js'
 import { HateoasMiddleware } from './middleware/hateoasMiddleware.js'
@@ -27,6 +30,9 @@ container.bind(TYPES.UserController).to(UserController)
 container.bind(TYPES.ArticleRouter).to(ArticleRouter)
 container.bind(TYPES.ArticleService).to(ArticleService)
 container.bind(TYPES.ArticleController).to(ArticleController)
+container.bind(TYPES.FileRouter).to(FileRouter)
+container.bind(TYPES.FileService).to(FileService)
+container.bind(TYPES.FileController).to(FileController)
 container.bind(TYPES.AuthMiddleware).to(AuthMiddleware)
 container.bind(TYPES.CheckOwnerMiddleware).to(CheckOwnerMiddleware)
 container.bind(TYPES.HateoasMiddleware).to(HateoasMiddleware)
