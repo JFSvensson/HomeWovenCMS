@@ -30,11 +30,11 @@ export class ArticleController {
    */
   async getArticle(req: Request, res: Response) {
     try {
-      const article = await this.articleService.getUserById(req.params.id)
-      if (!article) {
+      const response = await this.articleService.getArticle(req.params.id)
+      if (!response) {
         return res.status(404).json({ message: 'Article not found' })
       }
-      res.json(article)
+      res.json(response)
     } catch (error) {
       res.status(500).json({ message: 'An error occurred while fetching the article' })
     }

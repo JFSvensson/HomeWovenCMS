@@ -9,7 +9,7 @@
 import { Article } from '../../../models/article.js'
 
 export class ArticleService {
-  async getUserById(id: any) {
+  async getArticle(id: any) {
     const article = await Article.findById(id).select('-username -passphrase')
     return article
   }
