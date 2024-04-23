@@ -10,6 +10,10 @@ import { Request, Response, NextFunction } from 'express'
 import formidable, { Files, Fields } from 'formidable'
 import { promises as fsPromises } from 'fs'
 import path from 'path'
+import url from 'url'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 interface FormidableOptions {
   uploadDir: string
@@ -19,7 +23,10 @@ interface FormidableOptions {
 
 @injectable()
 export class UploadHandler {
-
+  constructor() {
+    this.parseForm = this.parseForm.bind(this)
+    this.uploadHandler = this.uploadHandler.bind(this)
+  }
   /**
    * Middleware to handle file uploads using formidable.
    * @param {Request} req - The request object.
@@ -29,7 +36,7 @@ export class UploadHandler {
    */
   async uploadHandler(req: Request, res: Response, next: NextFunction) {
     const options: FormidableOptions = {
-      uploadDir: path.join(__dirname, '../uploads'),
+      uploadDir: path.join(__dirname, '../../uploads'),
       keepExtensions: true,
       maxFileSize: 10 * 1024 * 1024, // 10MB limit
     }
@@ -39,7 +46,7 @@ export class UploadHandler {
       if (!files.file) {
         return res.status(400).json({ message: 'No files were uploaded.' })
       }
-
+      console.log(files.file)
       const file = Array.isArray(files.file) ? files.file[0] : files.file
       const newPath = await this.moveFile(file, options.uploadDir)
       res.status(200).json({
