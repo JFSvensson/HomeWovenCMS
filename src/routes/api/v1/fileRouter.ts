@@ -13,6 +13,7 @@ import { FileController } from '../../../controllers/api/v1/fileController.js'
 import { AuthMiddleware } from '../../../middleware/authMiddleware.js'
 import { CheckOwnerMiddleware } from '../../../middleware/checkOwnerMiddleware.js'
 import { HateoasMiddleware } from '../../../middleware/hateoasMiddleware.js'
+import { UploadHandler } from '../../../middleware/uploadHandlerMiddleware.js'
 
 @injectable()
 export class FileRouter {
@@ -20,17 +21,20 @@ export class FileRouter {
   private authMiddleware: AuthMiddleware
   private checkOwnerMiddleware: CheckOwnerMiddleware
   private hateoasMiddleware: HateoasMiddleware
+  private uploadHandler: UploadHandler
 
   constructor(
     @inject(TYPES.FileController) fileController: FileController,
     @inject(TYPES.AuthMiddleware) authMiddleware: AuthMiddleware,
     @inject(TYPES.CheckOwnerMiddleware) checkOwnerMiddleware: CheckOwnerMiddleware,
-    @inject(TYPES.HateoasMiddleware) hateoasMiddleware: HateoasMiddleware
+    @inject(TYPES.HateoasMiddleware) hateoasMiddleware: HateoasMiddleware,
+    @inject(TYPES.UploadHandler) uploadHandler: UploadHandler
   ) {
     this.fileController = fileController
     this.authMiddleware = authMiddleware
     this.checkOwnerMiddleware = checkOwnerMiddleware
     this.hateoasMiddleware = hateoasMiddleware
+    this.uploadHandler = uploadHandler
   }
 
   getRouter(): express.Router {
@@ -96,6 +100,7 @@ export class FileRouter {
       this.authMiddleware.checkAuthorization.bind(this.authMiddleware), 
       this.checkOwnerMiddleware.checkOwner.bind(this.checkOwnerMiddleware),
       this.hateoasMiddleware.addLinks,
+      this.uploadHandler.uploadHandler.bind(this.uploadHandler),
       (req, res) => this.fileController.createFile(req, res)
     )
 
