@@ -26,7 +26,7 @@ const options = {
       }
     ]
   },
-  apis: ['./src/routes/*.js', './src/routes/api/v1/**/*.js']
+  apis: ['./src/routes/*.ts', './src/routes/api/v1/**/*.ts']
 }
 
 const openapiSpecification = swaggerJSDoc(options)
