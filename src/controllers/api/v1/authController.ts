@@ -9,7 +9,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { Error } from 'mongoose'
 import { MongoError } from 'mongodb'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import crypto from 'crypto'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../../types.js'
@@ -132,10 +132,8 @@ export class AuthController {
     }
 
     try {
-      jwt.verify(refreshToken, refreshTokenSecret, (err: unknown, decoded: any) => {
-        if (err) {
-          return res.sendStatus(403)
-        }
+      const decoded = jwt.verify(refreshToken, refreshTokenSecret) as JwtPayload
+      if (typeof decoded === 'object' && decoded.sub && decoded.email) {
         const payload = {
           sub: decoded.sub,
           given_name: decoded.given_name,
@@ -158,7 +156,9 @@ export class AuthController {
           .json({ 
             access_token: accessToken 
           })
-      })
+      } else {
+        throw new Error('Invalid token payload.')
+      }
     } catch (error) {
       const err = new HttpError('Invalid token.', 403)
       next(err)
