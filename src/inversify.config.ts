@@ -17,6 +17,7 @@ import { FileController } from './controllers/api/v1/fileController.js'
 import { AuthMiddleware } from './middleware/authMiddleware.js'
 import { CheckOwnerMiddleware } from './middleware/checkOwnerMiddleware.js'
 import { HateoasMiddleware } from './middleware/hateoasMiddleware.js'
+import { UploadHandler } from './middleware/uploadHandlerMiddleware.js'
 
 const container = new Container()
 container.bind(TYPES.MainRouter).to(MainRouter)
@@ -36,5 +37,6 @@ container.bind(TYPES.FileController).to(FileController)
 container.bind(TYPES.AuthMiddleware).to(AuthMiddleware)
 container.bind(TYPES.CheckOwnerMiddleware).to(CheckOwnerMiddleware)
 container.bind(TYPES.HateoasMiddleware).to(HateoasMiddleware)
+container.bind(TYPES.UploadHandler).to(UploadHandler)
 
 export { container }

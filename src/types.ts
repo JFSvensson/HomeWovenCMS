@@ -1,3 +1,5 @@
+import { UploadHandler } from "./middleware/uploadHandlerMiddleware";
+
 export const TYPES = {
   MainRouter: Symbol.for('MainRouter'),
   ApiRouter: Symbol.for('ApiRouter'),
@@ -15,5 +17,6 @@ export const TYPES = {
   FileController: Symbol.for('FileController'),
   AuthMiddleware: Symbol.for('AuthMiddleware'),
   CheckOwnerMiddleware: Symbol.for('CheckOwnerMiddleware'),
-  HateoasMiddleware: Symbol.for('HateoasMiddleware')
+  HateoasMiddleware: Symbol.for('HateoasMiddleware'),
+  UploadHandler: Symbol.for('UploadHandler')
 }
