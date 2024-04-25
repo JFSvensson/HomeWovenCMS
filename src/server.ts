@@ -17,8 +17,7 @@ import { container } from './inversify.config.js'
 import { TYPES } from './types.js'
 import { MainRouter } from './routes/mainRouter.js'
 import { HttpError } from './lib/httpError.js'
-
-
+import cors from 'cors'
 
 const createServer = async () => {
   // Connect to the database.
@@ -31,6 +30,8 @@ const createServer = async () => {
   // Create an Express application.
   const app = express()
 
+  app.use(cors())
+
   // Setup helmet to secure the application.
   app.use(helmet())
   app.use(
@@ -40,7 +41,7 @@ const createServer = async () => {
         scriptSrc: ["'self'", "'unsafe-inline'", 'vassmolösa.se', 'vassmolosa.nu'],
         styleSrc: ["'self'", "'unsafe-inline'", 'vassmolösa.se', 'vassmolosa.nu'],
         imgSrc: ["'self'", 'data:', 'vassmolösa.se', 'vassmolosa.nu'],
-        connectSrc: ["'self'", 'vassmolösa.se', 'vassmolosa.nu'],
+        connectSrc: ["'self'", 'vassmolösa.se', 'vassmolosa.nu', 'http://localhost:3000'],
         frameSrc: ["'self'", 'vassmolösa.se', 'vassmolosa.nu'],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: []
