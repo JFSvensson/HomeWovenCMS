@@ -15,7 +15,6 @@ describe('UploadHandler Middleware', () => {
     const __filename = url.fileURLToPath(import.meta.url)
     const __dirname = path.dirname(__filename)
     const filePath = path.join(__dirname, 'TestImage.jpg')
-    console.log(filePath)
     const response = await request(app)
       .post('/upload')
       .attach('file', filePath)
