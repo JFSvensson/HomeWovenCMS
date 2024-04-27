@@ -46,7 +46,6 @@ export class UploadHandler {
       if (!files.file) {
         return res.status(400).json({ message: 'No files were uploaded.' })
       }
-      console.log(files.file)
       const file = Array.isArray(files.file) ? files.file[0] : files.file
       const newPath = await this.moveFile(file, options.uploadDir)
       res.status(200).json({
