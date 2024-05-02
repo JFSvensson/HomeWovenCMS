@@ -14,7 +14,6 @@ import crypto from 'crypto'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../../types.js'
 import { HttpError } from '../../../lib/httpError.js'
-import { IUser } from '../../../interfaces/user.js'
 import { AuthService } from '../../../services/api/v1/authService.js'
 import { tokenBlacklist } from '../../../config/tokenBlacklist.js'
 
@@ -73,7 +72,7 @@ export class AuthController {
         nonce: nonce
       }
 
-      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET_HW
       if (!accessTokenSecret) {
         throw new Error('ACCESS_TOKEN_SECRET is not set')
       }
@@ -82,7 +81,7 @@ export class AuthController {
         expiresIn: Number(process.env.ACCESS_TOKEN_LIFE)
       })
 
-      const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
+      const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET_HW
       if (!refreshTokenSecret) {
         throw new Error('REFRESH_TOKEN_SECRET is not set');
       }
@@ -126,7 +125,7 @@ export class AuthController {
       return res.sendStatus(403)
     }
 
-    const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
+    const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET_HW
     if (!refreshTokenSecret) {
       throw new Error('REFRESH_TOKEN_SECRET is not set')
     }
@@ -142,7 +141,7 @@ export class AuthController {
           nonce: decoded.nonce
         }
 
-        const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+        const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET_HW;
         if (!accessTokenSecret) {
           throw new Error('ACCESS_TOKEN_SECRET is not set');
         }
