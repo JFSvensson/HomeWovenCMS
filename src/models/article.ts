@@ -30,7 +30,13 @@ const schema = new mongoose.Schema({
     type: String,
     required: [true, 'Image URL is required.'],
     validate: [isURL, 'Please provide a valid URL for the image.']
-  }
+  },
+  imageText: {
+    type: String,
+    required: [true, 'Image text is required.'],
+    trim: true,
+    maxLength: [1024, 'The image text must be of maximum length 1024 characters.']
+  },
 }, {
   timestamps: true,
   toJSON: {
