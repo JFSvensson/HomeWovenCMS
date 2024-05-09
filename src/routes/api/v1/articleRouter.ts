@@ -36,6 +36,31 @@ export class ArticleRouter {
   getRouter(): express.Router {
     const router = express.Router()
 
+  /**
+   * @openapi
+   * /articles:
+   *   get:
+   *     summary: Get all articles belonging to a specific user
+   *     description: Returns information about all of a users articles in the system.
+   *     tags:
+   *       - Article
+   *     responses:
+   *       '200':
+   *         description: Successful response with article information.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Article'
+   *       '404':
+   *         description: Article not found.
+   */
+      router.get(
+        '/', 
+        this.authMiddleware.checkAuthorization.bind(this.authMiddleware), 
+        this.checkOwnerMiddleware.checkOwner.bind(this.checkOwnerMiddleware),
+        this.hateoasMiddleware.addLinks,
+        (req, res) => this.articleController.getAllArticles(req, res)
+      )
 
     /**
      * @openapi
