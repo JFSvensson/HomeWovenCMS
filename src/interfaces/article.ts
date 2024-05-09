@@ -6,4 +6,5 @@ export interface IArticle extends Document{
   imageUrl: string
   imageText: string
   id: string
+  owner: string
 }
