@@ -25,7 +25,7 @@ export class AuthMiddleware {
     // Extract the token from the Authorization header ("Bearer <token>"").
     const token = req.headers.authorization?.split(' ')[1]
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized - no token' })
+      return res.status(401).json({ message: 'Unauthorized' })
     }
     if (tokenBlacklist.isListed(token)) {
       return res.status(401).json({ message: 'Token is blacklisted' })
@@ -33,9 +33,7 @@ export class AuthMiddleware {
 
     try {
       const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET_HW
-      console.log('accessTokenSecret', accessTokenSecret)
       if (!accessTokenSecret) {
-        console.log('No access token')
         throw new Error('ACCESS_TOKEN_SECRET is not set')
       }
       const userData = jwt.verify(token, accessTokenSecret.replace(/\\n/g, '\n'), { algorithms: ['RS256'] })
@@ -43,7 +41,7 @@ export class AuthMiddleware {
       req.user = userData // Add the user data to the request object for use in other middleware functions.
       next()
     } catch (error) {
-      res.status(401).json({ message: 'Unauthorized - prolbme with secret or verify' })
+      res.status(401).json({ message: 'Unauthorized' })
     }
   }
 }
