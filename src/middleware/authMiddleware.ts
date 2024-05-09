@@ -37,7 +37,6 @@ export class AuthMiddleware {
         throw new Error('ACCESS_TOKEN_SECRET is not set')
       }
       const userData = jwt.verify(token, accessTokenSecret.replace(/\\n/g, '\n'), { algorithms: ['RS256'] })
-      console.log('userData', userData)
       req.user = userData // Add the user data to the request object for use in other middleware functions.
       next()
     } catch (error) {
