@@ -8,6 +8,8 @@
 import { injectable } from 'inversify'
 import { Response, NextFunction } from 'express'
 import { Request } from '../interfaces/request.js'
+import { JwtPayload } from 'jsonwebtoken'
+import { Article } from '../models/article.js'
 
 @injectable()
 export class CheckOwnerMiddleware {
@@ -21,12 +23,29 @@ export class CheckOwnerMiddleware {
    * @returns {void}
    */
   async checkOwner(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = (req.user as JwtPayload)?.sub
+  
+      if (!userId) {
+        return res.status(401).json({ message: 'Unauthorized: No user found' })
+      }
 
-    const isOwner = req.user && this.isOwner(req.user.sub, req.params.id)
-    if (!isOwner) {
-      return res.status(403).json({ message: 'Forbidden: You can only access your own data' })
+      const articleOwner = await Article.findById(req.params.id).select('owner')
+
+      if (!articleOwner) {
+        return res.status(404).json({ message: 'Not Found: Article not found' })
+      }
+  
+      const isOwner = this.isOwner(userId, articleOwner.owner)
+  
+      if (!isOwner) {
+        return res.status(403).json({ message: 'Forbidden: You can only access your own data' })
+      }
+  
+      next()
+    } catch (error) {
+      res.status(500).json({ message: 'An error occurred while checking the owner' })
     }
-    next()
   }
 
   isOwner(userIdFromToken: any, userIdFromResource: any) {
