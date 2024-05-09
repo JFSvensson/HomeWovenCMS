@@ -94,7 +94,6 @@ export class ArticleRouter {
     router.post(
       '/', 
       this.authMiddleware.checkAuthorization.bind(this.authMiddleware), 
-      this.checkOwnerMiddleware.checkOwner.bind(this.checkOwnerMiddleware),
       this.hateoasMiddleware.addLinks,
       (req, res) => this.articleController.createArticle(req, res)
     )
