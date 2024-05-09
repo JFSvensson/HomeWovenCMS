@@ -37,6 +37,10 @@ const schema = new mongoose.Schema({
     trim: true,
     maxLength: [1024, 'The image text must be of maximum length 1024 characters.']
   },
+  owner: {
+    type: String,
+    required: true
+  }
 }, {
   timestamps: true,
   toJSON: {
