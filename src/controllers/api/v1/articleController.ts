@@ -6,8 +6,10 @@
  * @since 0.1.0
  */
 import { injectable } from 'inversify'
-import { Request, Response, NextFunction } from 'express'
+import { Request } from '../../../interfaces/request.js'
+import { Response } from '../../../interfaces/response.js'
 import { ArticleService } from '../../../services/api/v1/articleService.js'
+import { JwtPayload } from 'jsonwebtoken'
 
 /**
  * Handles requests for article data.
@@ -50,7 +52,8 @@ export class ArticleController {
    */
     async createArticle(req: Request, res: Response) {
       try {
-        const response = await this.articleService.createArticle(req.body)
+        let userId = (req.user as JwtPayload)?.sub || ''
+        const response = await this.articleService.createArticle(req.body, userId)
         if (!response.article) {
           return res.status(404).json({ message: 'Article not found' })
         }
