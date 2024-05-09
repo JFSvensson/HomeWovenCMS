@@ -56,7 +56,7 @@ export class ArticleController {
         }
         res.json(response)
       } catch (error) {
-        res.status(500).json({ message: 'An error occurred while updating the article' })
+        res.status(500).json({ message: 'An error occurred while creating the article' })
       }
     }
 
