@@ -30,16 +30,35 @@ export class CheckOwnerMiddleware {
         return res.status(401).json({ message: 'Unauthorized: No user found' })
       }
 
-      const articleOwner = await Article.findById(req.params.id).select('owner')
+      if (req.params.id) {
+        // Check ownership of a single article
+        const articleOwner = await Article.findById(req.params.id).select('owner')
+  
+        if (!articleOwner) {
+          return res.status(404).json({ message: 'Not Found: Article not found' })
+        }
+  
+        const isOwner = this.isOwner(userId, articleOwner.owner)
+  
+        if (!isOwner) {
+          return res.status(403).json({ message: 'Forbidden: You can only access your own data' })
+        }
 
-      if (!articleOwner) {
-        return res.status(404).json({ message: 'Not Found: Article not found' })
-      }
+      } else {
+        // Retrieve all articles owned by the user
+        const articles = await Article.find({ owner: userId }).select('owner')
   
-      const isOwner = this.isOwner(userId, articleOwner.owner)
+        for (const article of articles) {
+          const isOwner = this.isOwner(userId, article.owner)
   
-      if (!isOwner) {
-        return res.status(403).json({ message: 'Forbidden: You can only access your own data' })
+          if (!isOwner) {
+            return res.status(403).json({ message: 'Forbidden: You can only access your own data' })
+          }
+        }
+
+        if (!articles) {
+          return res.status(404).json({ message: 'Not Found: No articles found for this user' })
+        }
       }
   
       next()
