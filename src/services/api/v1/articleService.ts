@@ -14,7 +14,8 @@ export class ArticleService {
     return article
   }
 
-  async createArticle(data: any) {
+  async createArticle(data: any, userId: string) {
+    data.owner = userId
     const article = await Article.create(data)
     return { message: 'Article created successfully', article }
   }
