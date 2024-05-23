@@ -10,6 +10,11 @@ import { Article } from '../../../models/article.js'
 
 export class ArticleService {
 
+  async getPublishedArticles() {
+    const articles = await Article.find()
+    return articles
+  }
+
   async getAllArticles(userId: string) {
     const articles = await Article.find({ owner: userId }).select('-username -passphrase')
     return articles

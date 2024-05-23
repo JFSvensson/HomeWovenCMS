@@ -25,6 +25,18 @@ export class ArticleController {
   /**
    * Get all articles belonging to a specific user.
    */
+  async getPublishedArticles(req: Request, res: Response) {
+    try {
+      const response = await this.articleService.getPublishedArticles()
+      res.json(response)
+    } catch (error) {
+      res.status(500).json({ message: 'An error occurred while fetching the articles' })
+    }
+  }
+
+  /**
+   * Get all articles belonging to a specific user.
+   */
   async getAllArticles(req: Request, res: Response) {
     try {
       let userId = (req.user as JwtPayload)?.sub || ''

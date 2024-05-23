@@ -38,6 +38,31 @@ export class ArticleRouter {
 
   /**
    * @openapi
+   * /articles/published:
+   *   get:
+   *     summary: Get all published articles
+   *     description: Returns all published articles in the system.
+   *     tags:
+   *       - Article
+   *     responses:
+   *       '200':
+   *         description: Successful response with article information.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Article'
+   *       '404':
+   *         description: Article not found.
+   */
+  router.get(
+    '/published',
+
+    this.hateoasMiddleware.addLinks,
+    (req, res) => this.articleController.getPublishedArticles(req, res)
+  )
+
+  /**
+   * @openapi
    * /articles:
    *   get:
    *     summary: Get all articles belonging to a specific user
@@ -98,7 +123,7 @@ export class ArticleRouter {
     
     /**
      * @openapi
-     * /articles}:
+     * /articles:
      *   post:
      *    summary: Add an article
      *    description: Add an article to the system.
