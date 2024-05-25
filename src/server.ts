@@ -18,6 +18,11 @@ import { TYPES } from './types.js'
 import { MainRouter } from './routes/mainRouter.js'
 import { HttpError } from './lib/httpError.js'
 import cors from 'cors'
+import path from 'path'
+import url from 'url'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const createServer = async () => {
   // Connect to the database.
@@ -30,7 +35,12 @@ const createServer = async () => {
   // Create an Express application.
   const app = express()
 
-  app.use(cors())
+  // CORS configuration
+  const corsOptions = {
+    origin: ['https://vassmolösa.se', 'https://vassmolosa.nu'],
+    optionsSuccessStatus: 200
+  }
+  app.use(cors(corsOptions))
 
   // Setup helmet to secure the application.
   app.use(helmet())
@@ -38,11 +48,11 @@ const createServer = async () => {
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", 'vassmolösa.se', 'vassmolosa.nu'],
-        styleSrc: ["'self'", "'unsafe-inline'", 'vassmolösa.se', 'vassmolosa.nu'],
-        imgSrc: ["'self'", 'data:', 'vassmolösa.se', 'vassmolosa.nu'],
-        connectSrc: ["'self'", 'vassmolösa.se', 'vassmolosa.nu', 'http://localhost:3000'],
-        frameSrc: ["'self'", 'vassmolösa.se', 'vassmolosa.nu'],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'https://vassmolösa.se', 'https://vassmolosa.nu'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://vassmolösa.se', 'https://vassmolosa.nu'],
+        imgSrc: ["'self'", 'data:', 'https://vassmolösa.se', 'https://vassmolosa.nu', 'https://svenssonom.se'],
+        connectSrc: ["'self'", 'https://vassmolösa.se', 'https://vassmolosa.nu', 'https://svenssonom.se', 'http://localhost:3000'],
+        frameSrc: ["'self'", 'https://vassmolösa.se', 'https://vassmolosa.nu', 'https://svenssonom.se'],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: []
       }
