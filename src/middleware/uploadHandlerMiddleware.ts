@@ -6,7 +6,8 @@
  * @since 0.1.0
  */
 import { injectable } from 'inversify'
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
+import { Request } from '../interfaces/request.js'
 import formidable, { Files, Fields } from 'formidable'
 import { promises as fsPromises } from 'fs'
 import path from 'path'
@@ -48,11 +49,13 @@ export class UploadHandler {
       }
       const file = Array.isArray(files.file) ? files.file[0] : files.file
       const newPath = await this.moveFile(file, options.uploadDir)
-      res.status(200).json({
-        message: 'File uploaded successfully',
-        path: newPath,
-        fields: fields
-      })
+
+      // Create a URL for the uploaded file
+      const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${path.basename(newPath)}`
+
+      // Attach fileUrl to the req object
+      req.fileUrl = fileUrl
+
     } catch (error) {
       console.error('Error handling the file upload:', error)
       next(error)
