@@ -37,7 +37,7 @@ const createServer = async () => {
 
   // CORS configuration
   const corsOptions = {
-    origin: ['https://vassmolösa.se', 'https://vassmolosa.nu'],
+    origin: ['https://vassmolösa.se', 'https://vassmolosa.nu', 'http://localhost:3000'],
     optionsSuccessStatus: 200
   }
   app.use(cors(corsOptions))
