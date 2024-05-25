@@ -6,7 +6,8 @@
  * @since 0.1.0
  */
 import { injectable } from 'inversify'
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
+import { Request } from '../../../interfaces/request.js'
 import { FileService } from '../../../services/api/v1/fileService.js'
 
 /**
@@ -54,7 +55,10 @@ export class FileController {
         if (!response.file) {
           return res.status(404).json({ message: 'File not found' })
         }
-        res.json(response)
+        res.json({
+          ...response,
+        fileUrl: req.fileUrl
+        })
       } catch (error) {
         res.status(500).json({ message: 'An error occurred while updating the file' })
       }
