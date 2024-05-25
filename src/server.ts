@@ -52,6 +52,9 @@ const createServer = async () => {
   // Serve Swagger docs
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification))
 
+  // Serve static files from the uploads directory
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+
   // Set up a morgan logger using the dev format for log entries.
   app.use(logger('dev'))
 
