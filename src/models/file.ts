@@ -6,25 +6,21 @@
  */
 
 import mongoose from 'mongoose'
-import validator from 'validator'
 import { IFile } from '../interfaces/file.js'
 import { IFileModel } from '../interfaces/fileModel.js'
-
-const { isURL } = validator
 
 // Create a schema.
 const schema = new mongoose.Schema({
   url: {
     type: String,
     required: [true, 'Image URL is required.'],
-    validate: [isURL, 'Please provide a valid URL for the image.']
   },
   description: {
     type: String,
     required: [true, 'Description is required.'],
     trim: true,
-    minLength: [5, 'The title must be of minimum length 5 characters.'],
-    maxLength: [1024, 'The title must be of maximum length 512 characters.']
+    minLength: [5, 'The description must be of minimum length 5 characters.'],
+    maxLength: [1024, 'The description must be of maximum length 512 characters.']
   }
 }, {
   timestamps: true,
