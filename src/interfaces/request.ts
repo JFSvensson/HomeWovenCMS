@@ -4,4 +4,5 @@ import { IUser } from './user.js'
 
 export interface Request extends ExpressRequest {
   user?: string | JwtPayload | IUser
+  fileUrl?: string
 }
