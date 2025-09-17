@@ -10,6 +10,7 @@ import mongoose from 'mongoose'
 import validator from 'validator'
 import { IUser } from '../interfaces/user.js'
 import { IUserModel } from '../interfaces/userModel.js'
+import { config } from '../config/environment.js'
 
 const { isEmail } = validator
 
@@ -78,7 +79,7 @@ schema.virtual('id').get(function () {
 
 // Salts and hashes password before save.
 schema.pre('save', async function () {
-  this.passphrase = await bcrypt.hash(this.passphrase, 10)
+  this.passphrase = await bcrypt.hash(this.passphrase, config.BCRYPT_ROUNDS)
 })
 
 /**
