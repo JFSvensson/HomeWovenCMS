@@ -12,6 +12,7 @@ import formidable, { Files, Fields } from 'formidable'
 import { promises as fsPromises } from 'fs'
 import path from 'path'
 import url from 'url'
+import { config } from '../config/environment.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -37,9 +38,9 @@ export class UploadHandler {
    */
   async uploadHandler(req: Request, res: Response, next: NextFunction) {
     const options: FormidableOptions = {
-      uploadDir: path.join(__dirname, '../../uploads'),
+      uploadDir: path.join(__dirname, `../../${config.UPLOAD_DIR}`),
       keepExtensions: true,
-      maxFileSize: 10 * 1024 * 1024, // 10MB limit
+      maxFileSize: config.MAX_FILE_SIZE,
     }
 
     try {
