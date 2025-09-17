@@ -10,6 +10,7 @@ import { Request } from '../interfaces/request.js'
 import { injectable } from 'inversify'
 import jwt from 'jsonwebtoken'
 import { tokenBlacklist } from '../config/tokenBlacklist.js'
+import { config } from '../config/environment.js'
 
 @injectable()
 export class AuthMiddleware {
@@ -32,11 +33,7 @@ export class AuthMiddleware {
     }
 
     try {
-      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET_HW
-      if (!accessTokenSecret) {
-        throw new Error('ACCESS_TOKEN_SECRET is not set')
-      }
-      const userData = jwt.verify(token, accessTokenSecret.replace(/\\n/g, '\n'), { algorithms: ['RS256'] })
+      const userData = jwt.verify(token, config.ACCESS_TOKEN_SECRET_HW.replace(/\\n/g, '\n'), { algorithms: ['RS256'] })
       req.user = userData // Add the user data to the request object for use in other middleware functions.
       next()
     } catch (error) {
