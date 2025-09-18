@@ -8,6 +8,7 @@
 import 'reflect-metadata'
 import express, { Request, Response, NextFunction } from 'express'
 import { connectToDatabase } from './config/mongoose.js'
+import { config } from './config/environment.js'
 import helmet from 'helmet'
 import logger from 'morgan'
 import cookieParser from 'cookie-parser'
@@ -25,19 +26,15 @@ const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const createServer = async () => {
-  // Connect to the database.
-  const dbConnectionString = process.env.DB_CONNECTION_STRING;
-  if (!dbConnectionString) {
-    throw new Error('DB_CONNECTION_STRING is not set');
-  }
-  await connectToDatabase(dbConnectionString)
+  // Connect to the database using centralized config
+  await connectToDatabase(config.DB_CONNECTION_STRING)
 
   // Create an Express application.
   const app = express()
 
-  // CORS configuration
+  // CORS configuration using environment config
   const corsOptions = {
-    origin: ['https://vassmolösa.se', 'https://vassmolosa.nu', 'http://localhost:3000'],
+    origin: config.ALLOWED_ORIGINS,
     optionsSuccessStatus: 200
   }
   app.use(cors(corsOptions))
@@ -63,7 +60,7 @@ const createServer = async () => {
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification))
 
   // Serve static files from the uploads directory
-  app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+    app.use(`/${config.UPLOAD_DIR}`, express.static(path.join(__dirname, config.UPLOAD_DIR)))
 
   // Set up a morgan logger using the dev format for log entries.
   app.use(logger('dev'))
