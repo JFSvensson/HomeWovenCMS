@@ -13,6 +13,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import crypto from 'crypto'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../../types.js'
+import { config } from '../../../config/environment.js'
 import { HttpError } from '../../../lib/httpError.js'
 import { AuthService } from '../../../services/api/v1/authService.js'
 import { tokenBlacklist } from '../../../config/tokenBlacklist.js'
@@ -72,26 +73,19 @@ export class AuthController {
         nonce: nonce
       }
 
-      const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET_HW
-      if (!accessTokenSecret) {
-        throw new Error('ACCESS_TOKEN_SECRET is not set')
-      }
-      const accessToken = jwt.sign(payload, accessTokenSecret.replace(/\\n/g, '\n'), {
+      const accessToken = jwt.sign(payload, config.ACCESS_TOKEN_SECRET_HW.replace(/\\n/g, '\n'), {
         algorithm: 'RS256',
-        expiresIn: Number(process.env.ACCESS_TOKEN_LIFE)
+        expiresIn: config.ACCESS_TOKEN_LIFE
       })
 
-      const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET_HW
-      if (!refreshTokenSecret) {
-        throw new Error('REFRESH_TOKEN_SECRET is not set');
-      }
-      const refreshToken = jwt.sign(payload, refreshTokenSecret.replace(/\\n/g, '\n'), {
+      const refreshToken = jwt.sign(payload, config.REFRESH_TOKEN_SECRET_HW.replace(/\\n/g, '\n'), {
         algorithm: 'RS256',
-        expiresIn: Number(process.env.REFRESH_TOKEN_LIFE)
+        expiresIn: config.REFRESH_TOKEN_LIFE
       })
       res.cookie('refreshToken', refreshToken, { 
         httpOnly: true, 
-        secure: process.env.NODE_ENV === 'production' 
+        secure: config.NODE_ENV === 'production',
+        sameSite: config.NODE_ENV === 'production' ? 'strict' : 'lax'
       })
 
       res
@@ -125,13 +119,8 @@ export class AuthController {
       return res.sendStatus(403)
     }
 
-    const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET_HW
-    if (!refreshTokenSecret) {
-      throw new Error('REFRESH_TOKEN_SECRET is not set')
-    }
-
     try {
-      const decoded = jwt.verify(refreshToken, refreshTokenSecret) as JwtPayload
+      const decoded = jwt.verify(refreshToken, config.REFRESH_TOKEN_SECRET_HW) as JwtPayload
       if (typeof decoded === 'object' && decoded.sub && decoded.email) {
         const payload = {
           sub: decoded.sub,
@@ -141,13 +130,9 @@ export class AuthController {
           nonce: decoded.nonce
         }
 
-        const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET_HW;
-        if (!accessTokenSecret) {
-          throw new Error('ACCESS_TOKEN_SECRET is not set');
-        }
-        const accessToken = jwt.sign(payload, accessTokenSecret.replace(/\\n/g, '\n'), {
+        const accessToken = jwt.sign(payload, config.ACCESS_TOKEN_SECRET_HW.replace(/\\n/g, '\n'), {
           algorithm: 'RS256',
-          expiresIn: process.env.ACCESS_TOKEN_LIFE
+          expiresIn: config.ACCESS_TOKEN_LIFE
         })
     
         res
